@@ -151,11 +151,24 @@ class NeuroPulseApp {
       this.config.stroopTrials = parseInt(btn.getAttribute('data-trials'), 10);
     });
 
+    const selectHand = document.getElementById('select-hand');
+    if (selectHand) {
+      selectHand.addEventListener('change', () => {
+        const val = selectHand.value;
+        this.config.tappingHand = val;
+        this.config.hand = val;
+        this.config.dominantHand = val;
+        const pills = document.querySelectorAll('#tapping-hand-selector .pill-btn');
+        pills.forEach(p => p.classList.toggle('active', p.getAttribute('data-tapping-hand') === val));
+      });
+    }
+
     this.setupPillGroup('tapping-hand-selector', (btn) => {
       const selectedHand = btn.getAttribute('data-tapping-hand') || 'Right Hand';
       this.config.tappingHand = selectedHand;
       this.config.hand = selectedHand;
       this.config.dominantHand = selectedHand;
+      if (selectHand) selectHand.value = selectedHand;
     });
 
     this.setupPillGroup('finger-selector', (btn) => {
@@ -189,13 +202,17 @@ class NeuroPulseApp {
     this.config.notes = (inputNotes.value || '').trim();
 
     // Read active hand selection option directly under User ID
+    const selectHand = document.getElementById('select-hand');
     const activeHandBtn = document.querySelector('#tapping-hand-selector .pill-btn.active');
-    if (activeHandBtn) {
-      const selectedHand = activeHandBtn.getAttribute('data-tapping-hand') || 'Right Hand';
-      this.config.tappingHand = selectedHand;
-      this.config.hand = selectedHand;
-      this.config.dominantHand = selectedHand;
+    let chosenHand = 'Right Hand';
+    if (selectHand && selectHand.value) {
+      chosenHand = selectHand.value;
+    } else if (activeHandBtn) {
+      chosenHand = activeHandBtn.getAttribute('data-tapping-hand') || 'Right Hand';
     }
+    this.config.tappingHand = chosenHand;
+    this.config.hand = chosenHand;
+    this.config.dominantHand = chosenHand;
   }
 
   showScreen(screenName) {
