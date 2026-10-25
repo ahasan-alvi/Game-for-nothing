@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#07090e">
+  <meta name="description" content="Medical-grade Psychomotor Vigilance Task (PVT) & Stroop Reaction Time Test Mobile App. Accurately measures motor-visual latency, mean/median RT, lapses, and false starts with CSV export.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="NeuroPulse PVT">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%2307090e' stroke='%2300f2fe' stroke-width='6'/><path d='M25 52 L40 52 L47 28 L53 72 L60 52 L75 52' fill='none' stroke='%2300f2fe' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+  
+  <title>NeuroPulse — Clinical PVT & Reaction Time Engine</title>
+  
+  <!-- Modern Typography from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="theme-dark">
+  <div id="app" class="app-container">
+    
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">NEUROPULSE</span>
+          <span class="brand-badge">PVT &bull; STROOP</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="btn-toggle-sound" class="icon-btn" title="Toggle Sound Feedback" aria-label="Toggle Sound">
+          <svg id="icon-sound-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+          <svg id="icon-sound-off" class="hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        </button>
+
+        <button id="btn-open-history" class="icon-btn" title="View Saved Results & CSV" aria-label="View History">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span id="history-counter-pill" class="pill-badge hidden">0</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Screens Container -->
+    <main class="main-viewport">
+
+      <!-- ================= 1. SETUP / PREP SCREEN ================= -->
+      <section id="screen-setup" class="view-screen active">
+        <div class="screen-scroll-wrapper">
+          <div class="hero-card glassmorphism">
+            <div class="pulse-ring"></div>
+            <h1 class="hero-title">Precision Reaction & Vigilance Test</h1>
+            <p class="hero-subtitle">Clinically calibrated Psychomotor Vigilance Task (PVT) & Stroop cognitive engine. Sub-millisecond touch tracking.</p>
+          </div>
+
+          <!-- Mode Selector Tabs -->
+          <div class="mode-selector-container">
+            <div class="segmented-control" role="tablist">
+              <button class="segment-btn active" data-mode="pvt" role="tab" id="tab-pvt">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <span>5-Min PVT Test</span>
+              </button>
+              <button class="segment-btn" data-mode="stroop" role="tab" id="tab-stroop">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                <span>Stroop Effect</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Configuration Card -->
+          <div class="settings-card glassmorphism">
+            <div class="card-header">
+              <span class="card-icon">⚙️</span>
+              <h2 class="card-title">Ergonomic & Session Setup</h2>
+            </div>
+
+            <!-- Participant Identifier -->
+            <div class="form-group">
+              <label for="input-participant-id">Participant / User ID</label>
+              <div class="input-with-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <input type="text" id="input-participant-id" placeholder="e.g. Player_01 or Subject A" value="Player_01" autocomplete="off">
+              </div>
+            </div>
+
+            <!-- Duration Selection (SRS 5-min default + Quick testing modes) -->
+            <div class="form-group" id="group-duration">
+              <label>Session Duration (SRS: 5 Minutes)</label>
+              <div class="pill-options" id="duration-selector">
+                <button type="button" class="pill-btn" data-duration="30">30s (Demo)</button>
+                <button type="button" class="pill-btn" data-duration="60">1 Min</button>
+                <button type="button" class="pill-btn" data-duration="180">3 Min</button>
+                <button type="button" class="pill-btn active" data-duration="300">5 Min (SRS)</button>
+              </div>
+            </div>
+
+            <!-- Stroop Trial Count (Visible only in Stroop mode) -->
+            <div class="form-group hidden" id="group-stroop-trials">
+              <label>Number of Stroop Trials</label>
+              <div class="pill-options" id="stroop-trials-selector">
+                <button type="button" class="pill-btn" data-trials="10">10 Trials</button>
+                <button type="button" class="pill-btn active" data-trials="20">20 Trials</button>
+                <button type="button" class="pill-btn" data-trials="30">30 Trials</button>
+              </div>
+            </div>
+
+            <!-- Ergonomic Hand Selection -->
+            <div class="form-group">
+              <label>Dominant Hand (Ergonomic Profile)</label>
+              <div class="pill-options" id="hand-selector">
+                <button type="button" class="pill-btn active" data-hand="Right Hand">
+                  <span class="pill-emoji">👉</span> Right Hand
+                </button>
+                <button type="button" class="pill-btn" data-hand="Left Hand">
+                  <span class="pill-emoji">👈</span> Left Hand
+                </button>
+              </div>
+            </div>
+
+            <!-- Finger Mode -->
+            <div class="form-group">
+              <label>Comfort Finger Mode</label>
+              <div class="pill-options" id="finger-selector">
+                <button type="button" class="pill-btn active" data-finger="Index Finger">Index Finger</button>
+                <button type="button" class="pill-btn" data-finger="Thumb">Thumb</button>
+                <button type="button" class="pill-btn" data-finger="Any Finger">Any / Mixed</button>
+              </div>
+            </div>
+
+            <!-- Noise & Interruptions Context (As requested) -->
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="select-noise">Ambient Noise</label>
+                <select id="select-noise" class="custom-select">
+                  <option value="Quiet Room" selected>Quiet Room (Ideal)</option>
+                  <option value="Moderate Noise">Moderate Noise</option>
+                  <option value="Distracting / Loud">Distracting / Loud</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="select-interruption">Interruptions</label>
+                <select id="select-interruption" class="custom-select">
+                  <option value="None" selected>None (Undisturbed)</option>
+                  <option value="Minor (1 glance)">Minor (1 glance)</option>
+                  <option value="Significant Interruptions">Significant Interruptions</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Custom Notes -->
+            <div class="form-group">
+              <label for="input-notes">Notes / Observations (Optional)</label>
+              <input type="text" id="input-notes" placeholder="e.g. Tested post-caffeine, fatigued, morning test" autocomplete="off">
+            </div>
+          </div>
+
+          <!-- Rules / Instructions Card -->
+          <div class="rules-card glassmorphism">
+            <h3 class="rules-title">Protocol & Standards:</h3>
+            <ul class="rules-list">
+              <li><strong>Randomized Stimuli:</strong> Digits appear at 1.0s – 4.0s intervals.</li>
+              <li><strong>Zero Anticipation:</strong> Tapping before the target or &lt;100 ms is flagged as a <em>False Start</em>.</li>
+              <li><strong>Sustained Focus:</strong> Responses slower than 500 ms are tagged as <em>Lapses</em>.</li>
+              <li><strong>High-Frequency Touch:</strong> Hardware latency compensated with high-speed touch listeners.</li>
+            </ul>
+          </div>
+
+          <!-- Bottom Action -->
+          <div class="cta-container">
+            <button id="btn-start-session" class="btn-primary-glow">
+              <span class="btn-text">INITIALIZE TEST</span>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 2. ACTIVE PVT TEST SCREEN ================= -->
+      <section id="screen-pvt-test" class="view-screen">
+        <div class="test-hud">
+          <div class="hud-item">
+            <span class="hud-label">TIME REMAINING</span>
+            <span id="hud-timer" class="hud-value font-mono">05:00</span>
+          </div>
+          <div class="hud-progress-bar-container">
+            <div id="hud-progress-fill" class="hud-progress-fill"></div>
+          </div>
+          <div class="hud-stats-row">
+            <div class="stat-pill"><span class="stat-lbl">Trials:</span> <span id="hud-trial-count" class="stat-val font-mono">0</span></div>
+            <div class="stat-pill"><span class="stat-lbl">Last RT:</span> <span id="hud-last-rt" class="stat-val font-mono">--- ms</span></div>
+            <div class="stat-pill"><span class="stat-lbl">Lapses:</span> <span id="hud-lapses" class="stat-val font-mono text-warning">0</span></div>
+          </div>
+          <button id="btn-abort-test" class="btn-text-only" title="Abort test early">Abort Session</button>
+        </div>
+
+        <!-- Fullscreen Interactive Reaction Arena -->
+        <div id="pvt-arena" class="reaction-arena" tabindex="0">
+          <div class="arena-content">
+            <div id="stimulus-status-indicator" class="stimulus-status">WAIT FOR STIMULUS</div>
+            
+            <div id="pvt-stimulus-display" class="stimulus-display">
+              <!-- High-contrast bright digit or wait indicator -->
+              <span id="stimulus-digit" class="digit-text font-mono">➕</span>
+            </div>
+
+            <div id="instant-feedback-banner" class="instant-feedback">
+              Ready...
+            </div>
+          </div>
+
+          <div class="tap-hint-footer">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+            </svg>
+            <span>TAP ANYWHERE ON SCREEN ON SIGHT</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 3. ACTIVE STROOP TEST SCREEN ================= -->
+      <section id="screen-stroop-test" class="view-screen">
+        <div class="test-hud">
+          <div class="hud-item">
+            <span class="hud-label">STROOP PROGRESS</span>
+            <span id="stroop-hud-trial" class="hud-value font-mono">Trial 1 / 20</span>
+          </div>
+          <div class="hud-stats-row">
+            <div class="stat-pill"><span class="stat-lbl">Congruent:</span> <span id="stroop-hud-cong-rt" class="stat-val font-mono">--- ms</span></div>
+            <div class="stat-pill"><span class="stat-lbl">Incongruent:</span> <span id="stroop-hud-incong-rt" class="stat-val font-mono">--- ms</span></div>
+            <div class="stat-pill"><span class="stat-lbl">Errors:</span> <span id="stroop-hud-errors" class="stat-val font-mono text-danger">0</span></div>
+          </div>
+          <button id="btn-abort-stroop" class="btn-text-only">Abort</button>
+        </div>
+
+        <div class="stroop-arena">
+          <div class="stroop-instruction">TAP THE <strong>INK COLOR</strong> (NOT THE WORD)</div>
+
+          <div class="stroop-word-card glassmorphism">
+            <div id="stroop-word-display" class="stroop-word">BLUE</div>
+            <div id="stroop-feedback" class="stroop-feedback">Waiting for prompt...</div>
+          </div>
+
+          <!-- 4 High Contrast Mobile Response Buttons -->
+          <div class="stroop-button-grid">
+            <button class="stroop-btn color-red" data-color="RED">
+              <span class="color-dot bg-red"></span>
+              <span class="btn-color-label">RED</span>
+            </button>
+            <button class="stroop-btn color-green" data-color="GREEN">
+              <span class="color-dot bg-green"></span>
+              <span class="btn-color-label">GREEN</span>
+            </button>
+            <button class="stroop-btn color-blue" data-color="BLUE">
+              <span class="color-dot bg-blue"></span>
+              <span class="btn-color-label">BLUE</span>
+            </button>
+            <button class="stroop-btn color-yellow" data-color="YELLOW">
+              <span class="color-dot bg-yellow"></span>
+              <span class="btn-color-label">YELLOW</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 4. RESULTS & ANALYTICS DASHBOARD ================= -->
+      <section id="screen-results" class="view-screen">
+        <div class="screen-scroll-wrapper">
+          <div class="results-header-banner glassmorphism">
+            <div class="badge-success-row">
+              <span class="pulse-dot"></span>
+              <span id="results-badge-type">SESSION COMPLETED</span>
+            </div>
+            <h2 id="results-summary-headline" class="results-headline">242 ms Median RT</h2>
+            <p id="results-timestamp" class="results-date">Started: 2026-10-26 00:25:00</p>
+          </div>
+
+          <!-- Quick Action Bar: CSV Export, Share, Restart -->
+          <div class="export-actions-bar">
+            <button id="btn-export-current-csv" class="btn-action-primary">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>Download CSV Report</span>
+            </button>
+            <button id="btn-export-trial-csv" class="btn-action-secondary" title="Detailed Trial-by-Trial Latency Data">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+              </svg>
+              <span>Trial Logs (Raw ms)</span>
+            </button>
+          </div>
+
+          <!-- Primary Required Metrics Grid (As requested by User & SRS) -->
+          <div class="metrics-grid">
+            
+            <div class="metric-card glassmorphism highlight-card">
+              <div class="metric-icon">🎯</div>
+              <div class="metric-info">
+                <span class="metric-label">Median Reaction Time</span>
+                <span id="metric-median-rt" class="metric-value font-mono">--- ms</span>
+                <span class="metric-subtext">Gold Standard PVT Metric</span>
+              </div>
+            </div>
+
+            <div class="metric-card glassmorphism">
+              <div class="metric-icon">📊</div>
+              <div class="metric-info">
+                <span class="metric-label">Mean Reaction Time</span>
+                <span id="metric-mean-rt" class="metric-value font-mono">--- ms</span>
+                <span class="metric-subtext">Arithmetic average</span>
+              </div>
+            </div>
+
+            <div class="metric-card glassmorphism">
+              <div class="metric-icon">⚡</div>
+              <div class="metric-info">
+                <span class="metric-label">Peak Performance</span>
+                <div class="multi-value-row">
+                  <div><span class="lbl-dim">Best:</span> <strong id="metric-best-rt" class="text-success font-mono">---</strong></div>
+                  <div><span class="lbl-dim">Worst:</span> <strong id="metric-worst-rt" class="text-danger font-mono">---</strong></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="metric-card glassmorphism">
+              <div class="metric-icon">⚠️</div>
+              <div class="metric-info">
+                <span class="metric-label">Lapses (&gt; 500 ms)</span>
+                <span id="metric-lapses" class="metric-value font-mono text-warning">0</span>
+                <span id="metric-lapse-rate" class="metric-subtext">0.0% lapse rate</span>
+              </div>
+            </div>
+
+            <div class="metric-card glassmorphism">
+              <div class="metric-icon">🚫</div>
+              <div class="metric-info">
+                <span class="metric-label">False Starts (&lt; 100 ms)</span>
+                <span id="metric-false-starts" class="metric-value font-mono text-danger">0</span>
+                <span class="metric-subtext">Anticipatory tapping</span>
+              </div>
+            </div>
+
+            <div class="metric-card glassmorphism">
+              <div class="metric-icon">✅</div>
+              <div class="metric-info">
+                <span class="metric-label">Valid Trials Count</span>
+                <span id="metric-valid-trials" class="metric-value font-mono">0</span>
+                <span id="metric-accuracy-rate" class="metric-subtext">100% accuracy</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Optional Stroop Metrics Card (Shown if Stroop or both) -->
+          <div id="stroop-results-card" class="stroop-metrics-card glassmorphism hidden">
+            <h3 class="card-title">🧠 Stroop Interference Analysis</h3>
+            <div class="stroop-grid">
+              <div class="stroop-box">
+                <span class="s-label">Congruent Mean RT</span>
+                <span id="metric-stroop-cong" class="s-val font-mono">--- ms</span>
+                <span class="s-note">Matching ink & text</span>
+              </div>
+              <div class="stroop-box">
+                <span class="s-label">Incongruent Mean RT</span>
+                <span id="metric-stroop-incong" class="s-val font-mono">--- ms</span>
+                <span class="s-note">Conflicting ink & text</span>
+              </div>
+              <div class="stroop-box highlight-box">
+                <span class="s-label">Interference Delay (Delta)</span>
+                <span id="metric-stroop-interference" class="s-val font-mono">+-- ms</span>
+                <span class="s-note">Cognitive overhead</span>
+              </div>
+              <div class="stroop-box">
+                <span class="s-label">Stroop Errors</span>
+                <span id="metric-stroop-errors" class="s-val font-mono text-danger">0</span>
+                <span class="s-note">Mistapped ink colors</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Metadata & Context Review Card -->
+          <div class="metadata-review-card glassmorphism">
+            <h3 class="card-title">Session Ergonomics & Context Metadata</h3>
+            <div class="metadata-table">
+              <div class="meta-row">
+                <span class="meta-k">Participant ID</span>
+                <span id="res-meta-participant" class="meta-v">---</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-k">Start Time (Clock)</span>
+                <span id="res-meta-clock" class="meta-v">---</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-k">Ergonomic Profile</span>
+                <span id="res-meta-hand" class="meta-v">Right Hand &bull; Index</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-k">Environment Noise</span>
+                <span id="res-meta-noise" class="meta-v">Quiet Room</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-k">Interruptions</span>
+                <span id="res-meta-interruptions" class="meta-v">None</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-k">Notes & Observations</span>
+                <span id="res-meta-notes" class="meta-v">---</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Performance Interactive Chart -->
+          <div class="chart-card glassmorphism">
+            <div class="chart-header">
+              <h3 class="card-title">Latency Timeline (Per-Trial Progression)</h3>
+              <span class="chart-legend"><span class="legend-dot green"></span> Valid RT &bull; <span class="legend-dot red"></span> Lapse &gt;500ms</span>
+            </div>
+            <div class="chart-canvas-wrapper">
+              <canvas id="canvas-trial-chart" width="600" height="220"></canvas>
+            </div>
+          </div>
+
+          <!-- Bottom Action Buttons -->
+          <div class="results-actions">
+            <button id="btn-return-home" class="btn-primary-glow">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+              <span>Back to Setup / New Test</span>
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ================= 5. HISTORY & DATABASE DRAWER ================= -->
+    <div id="drawer-history" class="drawer-backdrop hidden">
+      <div class="drawer-panel glassmorphism">
+        <div class="drawer-header">
+          <div class="drawer-title-group">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <h2>Performance History & Export</h2>
+          </div>
+          <button id="btn-close-history" class="icon-btn" aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div class="drawer-toolbar">
+          <button id="btn-export-all-csv" class="btn-action-primary">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Export All Sessions (CSV)</span>
+          </button>
+          <button id="btn-clear-history" class="btn-danger-outline" title="Clear all local data">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+            <span>Clear</span>
+          </button>
+        </div>
+
+        <div id="history-list-container" class="history-list">
+          <!-- Populated by JavaScript -->
+          <div class="empty-state">
+            <p>No tests recorded yet.</p>
+            <span>Complete a 5-minute PVT or Stroop test to log data.</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/audio.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

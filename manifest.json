@@ -1,0 +1,24 @@
+{
+  "name": "NeuroPulse PVT & Stroop Reaction Engine",
+  "short_name": "NeuroPulse",
+  "description": "Clinical Psychomotor Vigilance Task (PVT) & Stroop Reaction Time Test Mobile App with millisecond precision and CSV data capture.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#07090e",
+  "theme_color": "#07090e",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><circle cx='96' cy='96' r='90' fill='%2307090e' stroke='%2300f2fe' stroke-width='10'/><path d='M45 100 L75 100 L90 55 L102 140 L115 100 L145 100' fill='none' stroke='%2300f2fe' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle cx='256' cy='256' r='240' fill='%2307090e' stroke='%2300f2fe' stroke-width='24'/><path d='M120 266 L200 266 L240 146 L272 374 L306 266 L386 266' fill='none' stroke='%2300f2fe' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
