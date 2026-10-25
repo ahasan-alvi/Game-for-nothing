@@ -545,6 +545,40 @@
       </div>
     </div>
 
+    <!-- ================= 6. PRE-GAME HAND SELECTION POPUP MODAL ================= -->
+    <div id="modal-hand-selection" class="modal-center-backdrop hidden">
+      <div class="hand-selection-modal-card">
+        <span class="hand-modal-badge">⚡ Protocol Setup</span>
+        <h2 class="hand-modal-title">Select Tapping Hand</h2>
+        <p class="hand-modal-subtitle">Which hand will you tap with for this reaction test?</p>
+
+        <div class="hand-modal-options">
+          <button type="button" class="hand-modal-choice-btn active" data-modal-hand="Right Hand" id="btn-modal-hand-right">
+            <span class="hand-choice-icon">👉</span>
+            <span class="hand-choice-label">Right Hand</span>
+            <span class="hand-choice-sub">Tap with Right</span>
+          </button>
+          <button type="button" class="hand-modal-choice-btn" data-modal-hand="Left Hand" id="btn-modal-hand-left">
+            <span class="hand-choice-icon">👈</span>
+            <span class="hand-choice-label">Left Hand</span>
+            <span class="hand-choice-sub">Tap with Left</span>
+          </button>
+        </div>
+
+        <div class="hand-modal-actions">
+          <button type="button" id="btn-confirm-start-test" class="btn-start-with-hand">
+            <span id="btn-confirm-hand-text">START TEST (RIGHT HAND)</span>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+          </button>
+          <button type="button" id="btn-close-hand-modal" class="btn-cancel-hand-modal">
+            Cancel & Return to Setup
+          </button>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- Scripts -->

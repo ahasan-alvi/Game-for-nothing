@@ -2,7 +2,7 @@
  * NEUROPULSE SERVICE WORKER
  * Offline cache and instant startup for mobile APK / PWA execution.
  */
-const CACHE_NAME = 'neuropulse-cache-v2';
+const CACHE_NAME = 'neuropulse-cache-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

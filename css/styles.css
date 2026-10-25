@@ -1288,3 +1288,185 @@ input[type="text"]:focus, select:focus {
   background: rgba(0, 242, 254, 0.6);
 }
 
+/* ===================================================================
+   PRE-GAME HAND SELECTION POPUP MODAL
+   =================================================================== */
+
+.modal-center-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 5, 10, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 120;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.22s ease, visibility 0.22s ease;
+}
+
+.modal-center-backdrop.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.hand-selection-modal-card {
+  width: 100%;
+  max-width: 440px;
+  background: rgba(13, 19, 33, 0.96);
+  border: 1px solid rgba(0, 242, 254, 0.35);
+  border-radius: 20px;
+  padding: 28px 24px 22px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), 0 0 30px rgba(0, 242, 254, 0.18);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: modalPopIn 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPopIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.hand-modal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(0, 242, 254, 0.12);
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  color: var(--cyan-bright);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+
+.hand-modal-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.hand-modal-subtitle {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-bottom: 22px;
+  line-height: 1.4;
+}
+
+.hand-modal-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.hand-modal-choice-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 14px;
+  background: rgba(22, 30, 48, 0.85);
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  color: #fff;
+}
+
+.hand-modal-choice-btn .hand-choice-icon {
+  font-size: 2.3rem;
+  margin-bottom: 8px;
+  transition: transform 0.2s ease;
+}
+
+.hand-modal-choice-btn .hand-choice-label {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.hand-modal-choice-btn .hand-choice-sub {
+  font-size: 0.74rem;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+.hand-modal-choice-btn:hover {
+  background: rgba(28, 38, 62, 0.95);
+  border-color: rgba(0, 242, 254, 0.45);
+}
+
+.hand-modal-choice-btn.active {
+  background: rgba(0, 242, 254, 0.15);
+  border-color: var(--cyan-bright);
+  box-shadow: 0 0 20px var(--cyan-glow);
+}
+
+.hand-modal-choice-btn.active .hand-choice-icon {
+  transform: scale(1.18);
+}
+
+.hand-modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.btn-start-with-hand {
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  background: linear-gradient(135deg, var(--cyan-bright), var(--blue-neon));
+  color: #07090e;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 20px var(--cyan-glow);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-start-with-hand:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(0, 242, 254, 0.5);
+}
+
+.btn-cancel-hand-modal {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  padding: 8px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.btn-cancel-hand-modal:hover {
+  color: #fff;
+}
+
+

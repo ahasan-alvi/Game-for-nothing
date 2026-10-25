@@ -85,9 +85,45 @@ class NeuroPulseApp {
       groupStroopTrials.classList.remove('hidden');
     });
 
-    // Start Test CTA Button
+    // Pre-Game Hand Selection Modal Hooks
+    const modalHand = document.getElementById('modal-hand-selection');
+    const btnConfirmStart = document.getElementById('btn-confirm-start-test');
+    const btnCloseHandModal = document.getElementById('btn-close-hand-modal');
+    const btnModalRight = document.getElementById('btn-modal-hand-right');
+    const btnModalLeft = document.getElementById('btn-modal-hand-left');
+    const txtConfirmHand = document.getElementById('btn-confirm-hand-text');
+
+    const updateModalHandUI = (hand) => {
+      this.config.tappingHand = hand;
+      const isRight = hand === 'Right Hand';
+      if (btnModalRight) btnModalRight.classList.toggle('active', isRight);
+      if (btnModalLeft) btnModalLeft.classList.toggle('active', !isRight);
+      if (txtConfirmHand) txtConfirmHand.textContent = `START TEST (${hand.toUpperCase()})`;
+
+      // Keep setup screen buttons in sync
+      const setupPills = document.querySelectorAll('#tapping-hand-selector .pill-btn');
+      setupPills.forEach(pill => {
+        pill.classList.toggle('active', pill.getAttribute('data-tapping-hand') === hand);
+      });
+    };
+
+    // Clicking INITIALIZE TEST opens the Hand Selection Pop-Up before test begins
     document.getElementById('btn-start-session').addEventListener('click', () => {
       this.readFormInputs();
+      updateModalHandUI(this.config.tappingHand || 'Right Hand');
+      if (modalHand) modalHand.classList.remove('hidden');
+    });
+
+    if (btnModalRight) {
+      btnModalRight.addEventListener('click', () => updateModalHandUI('Right Hand'));
+    }
+
+    if (btnModalLeft) {
+      btnModalLeft.addEventListener('click', () => updateModalHandUI('Left Hand'));
+    }
+
+    const executeSessionStart = () => {
+      if (modalHand) modalHand.classList.add('hidden');
       if (this.config.mode === 'pvt') {
         this.showScreen('pvt-test');
         window.testingEngine.startPVTSession(this.config);
@@ -95,7 +131,23 @@ class NeuroPulseApp {
         this.showScreen('stroop-test');
         window.testingEngine.startStroopSession(this.config);
       }
-    });
+    };
+
+    if (btnConfirmStart) {
+      btnConfirmStart.addEventListener('click', () => executeSessionStart());
+    }
+
+    if (btnCloseHandModal) {
+      btnCloseHandModal.addEventListener('click', () => {
+        if (modalHand) modalHand.classList.add('hidden');
+      });
+    }
+
+    if (modalHand) {
+      modalHand.addEventListener('click', (e) => {
+        if (e.target === modalHand) modalHand.classList.add('hidden');
+      });
+    }
 
     // Abort Buttons
     document.getElementById('btn-abort-test').addEventListener('click', () => {
