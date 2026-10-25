@@ -87,7 +87,8 @@ Once deployed to your Vercel URL:
    - Stroop Interference Delay ($\Delta$ ms)
    - Total Stroop errors & accuracy rate
 9. **Ergonomic Profile & Notes**:
-   - Dominant hand (Right Hand / Left Hand)
+   - Tapping Hand (Right Hand / Left Hand) — Which hand the user taps with
+   - Dominant hand (Right Hand / Left Hand) — Natural ergonomic handedness
    - Comfort finger mode (Index / Thumb / Any)
    - Ambient noise (Quiet / Moderate / Loud)
    - Interruptions (None / Minor / Significant)
@@ -99,7 +100,7 @@ Once deployed to your Vercel URL:
 
 1. **Session Summary CSV**:
    - Click **Download CSV Report** on the results screen, or **Export All Sessions (CSV)** in the History drawer.
-   - Generates an RFC 4180 CSV containing Session ID, Participant ID, Start Clock, Median RT, Mean RT, Best/Worst RT, Valid Trials, Lapses (>500ms), False Starts (<100ms), Stroop Congruent/Incongruent RT, Stroop Errors, Noise, Interruptions, and Notes.
+   - Generates an RFC 4180 CSV containing Session ID, Participant ID, Tapping Hand, Dominant Hand, Start Clock, Median RT, Mean RT, Best/Worst RT, Valid Trials, Lapses (>500ms), False Starts (<100ms), Stroop Congruent/Incongruent RT, Stroop Errors, Noise, Interruptions, and Notes.
 2. **Trial-by-Trial Raw Logs CSV**:
    - Click **Trial Logs (Raw ms)** on the results screen.
-   - Exports the millisecond reaction time, stimulus digit, delay, and classification for every single individual tap.
+   - Exports the millisecond reaction time, tapping hand, stimulus digit, delay, and classification for every single individual tap.

@@ -13,6 +13,8 @@ class NeuroPulseApp {
       participantId: 'Player_01',
       durationSeconds: 300, // 5 min default (SRS)
       stroopTrials: 20,
+      tappingHand: 'Right Hand',
+      dominantHand: 'Right Hand',
       hand: 'Right Hand',
       finger: 'Index Finger',
       noiseLevel: 'Quiet Room',
@@ -149,8 +151,13 @@ class NeuroPulseApp {
       this.config.stroopTrials = parseInt(btn.getAttribute('data-trials'), 10);
     });
 
+    this.setupPillGroup('tapping-hand-selector', (btn) => {
+      this.config.tappingHand = btn.getAttribute('data-tapping-hand');
+    });
+
     this.setupPillGroup('hand-selector', (btn) => {
       this.config.hand = btn.getAttribute('data-hand');
+      this.config.dominantHand = btn.getAttribute('data-hand');
     });
 
     this.setupPillGroup('finger-selector', (btn) => {
@@ -237,7 +244,9 @@ class NeuroPulseApp {
     // Metadata Review
     document.getElementById('res-meta-participant').textContent = data.participantId;
     document.getElementById('res-meta-clock').textContent = data.startTimeClock;
-    document.getElementById('res-meta-hand').textContent = `${data.hand} • ${data.finger}`;
+    const resTappingHand = document.getElementById('res-meta-tapping-hand');
+    if (resTappingHand) resTappingHand.textContent = data.tappingHand || data.hand || 'Right Hand';
+    document.getElementById('res-meta-hand').textContent = `${data.dominantHand || data.hand || 'Right Hand'} • ${data.finger || 'Index'}`;
     document.getElementById('res-meta-noise').textContent = data.noiseLevel;
     document.getElementById('res-meta-interruptions').textContent = data.interruptions;
     document.getElementById('res-meta-notes').textContent = data.notes || 'None logged';
@@ -393,6 +402,7 @@ class NeuroPulseApp {
         </div>
         <div class="history-item-stats">
           <div>Participant: <strong>${s.participantId || 'Player'}</strong></div>
+          <div>Tapping Hand: <strong class="font-mono" style="color:var(--cyan-bright)">${s.tappingHand || s.hand || 'Right Hand'}</strong></div>
           <div>Median: <strong class="text-success font-mono">${s.medianRT} ms</strong></div>
           <div>Lapses: <strong class="text-warning font-mono">${s.lapsesCount}</strong></div>
         </div>

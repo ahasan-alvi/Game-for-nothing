@@ -47,6 +47,8 @@ class TestingEngine {
       hudTrialCount: document.getElementById('hud-trial-count'),
       hudLastRt: document.getElementById('hud-last-rt'),
       hudLapses: document.getElementById('hud-lapses'),
+      hudTapHand: document.getElementById('hud-tap-hand'),
+      pvtTapHandPrompt: document.getElementById('pvt-tap-hand-prompt'),
 
       // Stroop Elements
       stroopScreen: document.getElementById('screen-stroop-test'),
@@ -55,7 +57,8 @@ class TestingEngine {
       stroopHudTrial: document.getElementById('stroop-hud-trial'),
       stroopHudCongRt: document.getElementById('stroop-hud-cong-rt'),
       stroopHudIncongRt: document.getElementById('stroop-hud-incong-rt'),
-      stroopHudErrors: document.getElementById('stroop-hud-errors')
+      stroopHudErrors: document.getElementById('stroop-hud-errors'),
+      stroopHudTapHand: document.getElementById('stroop-hud-tap-hand')
     };
 
     this.attachEventListeners();
@@ -114,6 +117,12 @@ class TestingEngine {
 
     // Reset HUD display
     this.updatePVTHUD();
+    if (this.elements.hudTapHand) {
+      this.elements.hudTapHand.textContent = (config.tappingHand || 'Right Hand').replace(' Hand', '');
+    }
+    if (this.elements.pvtTapHandPrompt) {
+      this.elements.pvtTapHandPrompt.textContent = (config.tappingHand || 'Right Hand').toUpperCase();
+    }
     this.elements.pvtArena.classList.remove('stimulus-active', 'false-start', 'lapse-warning');
     this.elements.stimulusDigit.textContent = '➕';
     this.elements.stimulusStatus.textContent = 'PREPARE... FOCUS ON CENTER';
@@ -365,6 +374,9 @@ class TestingEngine {
     this.stroopTotalTrials = config.stroopTrials || 20;
 
     this.updateStroopHUD();
+    if (this.elements.stroopHudTapHand) {
+      this.elements.stroopHudTapHand.textContent = (config.tappingHand || 'Right Hand').replace(' Hand', '');
+    }
     this.nextStroopTrial();
   }
 
